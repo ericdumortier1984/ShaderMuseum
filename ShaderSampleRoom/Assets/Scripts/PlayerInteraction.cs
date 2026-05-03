@@ -14,6 +14,10 @@ public class PlayerInteraction : MonoBehaviour
 	private bool isInteracting = false;
 	private float targetAlpha = 0f;
 
+	private XRayGlasses xRayGlasses;
+	private ThermalGlasses thermalGlasses;
+	private NightGlasses nightGlasses;
+
 	void Awake()
 	{
 		input = new PlayerInputActions();
@@ -43,6 +47,30 @@ public class PlayerInteraction : MonoBehaviour
 
 	private void OnInteract(InputAction.CallbackContext ctx)
 	{
+		if (xRayGlasses != null)
+		{
+			xRayGlasses.DropGlasses();
+			xRayGlasses = null;
+			isInteracting = false;
+			return;
+		}
+
+		if (thermalGlasses != null)
+		{
+			thermalGlasses.DropGlasses();
+			thermalGlasses = null;
+			isInteracting = false;
+			return;
+		}
+
+		if (nightGlasses != null)
+		{
+			nightGlasses.DropGlasses();
+			nightGlasses = null;
+			isInteracting = false;
+			return;
+		}
+
 		Interact();
 	}
 
@@ -53,9 +81,29 @@ public class PlayerInteraction : MonoBehaviour
 		if (Physics.Raycast(ray, out RaycastHit hit, distance))
 		{
 			var interactable = hit.collider.GetComponent<IInteractable>();
+
 			if (interactable != null)
 			{
 				interactable.Interact();
+
+				var currentXRayGlasses = hit.collider.GetComponent<XRayGlasses>();
+				if (currentXRayGlasses != null)
+				{
+					xRayGlasses = currentXRayGlasses;
+				}
+
+				var currentThermalGlasses = hit.collider.GetComponent<ThermalGlasses>();
+				if (currentThermalGlasses != null)
+				{
+					thermalGlasses = currentThermalGlasses;
+				}
+
+				var currentNightGlasses = hit.collider.GetComponent<NightGlasses>();
+				if (currentNightGlasses != null)
+				{
+					nightGlasses = currentNightGlasses;
+				}
+
 				SetInteracting(true);
 			}
 		}

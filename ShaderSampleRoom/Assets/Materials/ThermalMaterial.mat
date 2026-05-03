@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: X - RayMaterial
-  m_Shader: {fileID: -6465566751694194690, guid: 31ec73067a058574c9e141770296a2f5, type: 3}
+  m_Name: ThermalMaterial
+  m_Shader: {fileID: -6465566751694194690, guid: a83c82f4092c26443b4c2a68f49fb93a, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -40,12 +40,11 @@ Material:
     m_Floats:
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _X_RayPower: 1
-    m_Colors:
-    - _EmissionColor: {r: 0.24416822, g: 3.2784321, b: 3.5873942, a: 1}
+    - _ThermalPower: 0.25
+    m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &3767429052859691960
+--- !u!114 &2669754703888123558
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

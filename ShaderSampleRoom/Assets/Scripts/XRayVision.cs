@@ -6,14 +6,13 @@ public class XRayVision : MonoBehaviour
     [SerializeField] private GameObject xRayGlasses;
 	[SerializeField] private Camera xRayCamera;
 
-	[Header("On Interaction Settings")]
-	//[SerializeField] private Transform lookTarget;
-	[SerializeField] private PlayerController player;
-	[SerializeField] private PlayerInteraction playerInteraction;
-
 	public void EnableXRayVision()
 	{
-		xRayCamera.enabled = true;
-		Debug.Log(xRayCamera.cullingMask);
+		xRayCamera.gameObject.SetActive(true);
+	}
+
+	public void DisableXRayVision()
+	{
+		xRayCamera.gameObject.SetActive(false);
 	}
 }

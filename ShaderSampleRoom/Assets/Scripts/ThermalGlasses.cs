@@ -1,9 +1,9 @@
 using UnityEngine;
 using System.Collections;
 
-public class XRayGlasses : MonoBehaviour, IInteractable
+public class ThermalGlasses : MonoBehaviour, IInteractable
 {
-	[SerializeField] private XRayVision xRayVision;
+    [SerializeField] private ThermalVision thermalVision;
 
 	private Vector3 initialPosition;
 	private Quaternion initialRotation;
@@ -17,20 +17,17 @@ public class XRayGlasses : MonoBehaviour, IInteractable
 	}
 
 	public void Interact()
-	{
-		if (!isInteracted)
-		{
-			xRayVision.EnableXRayVision();
-			gameObject.SetActive(false);
-		}
-	}
+    {
+        thermalVision.EnableThermalVision();
+        gameObject.SetActive(false);
+    }
 
 	public void DropGlasses()
 	{
 		isInteracted = false;
 		transform.position = initialPosition;
 		transform.rotation = initialRotation;
-		xRayVision.DisableXRayVision();
+		thermalVision.DisableThermalVision();
 		gameObject.SetActive(true);
 	}
 }
