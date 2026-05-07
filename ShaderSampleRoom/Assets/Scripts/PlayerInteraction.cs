@@ -5,18 +5,24 @@ public class PlayerInteraction : MonoBehaviour
 {
 	[Header("Interaction Settings")]
 	[SerializeField] private CanvasGroup interactCanvas;
+	[SerializeField] private CanvasGroup leaveGlassesCanvas;
+	[SerializeField] private CanvasGroup resetViewCanvas;
 	[SerializeField] private float fadeSpeed = 5f;
 	[SerializeField] private float distance = 3f;
-	[SerializeField] private Camera cam;
+	[SerializeField] private Camera playerCamera;
 
+	// Player input actions
 	PlayerInputActions input;
 
+	// State variables
 	private bool isInteracting = false;
-	private float targetAlpha = 0f;
+	private float interactTextAlpha = 0f;
+	private float leaveGlassesTextAlpha = 0f;
+	private float resetViewTextAlpha = 0f;
 
-	private XRayGlasses xRayGlasses;
-	private ThermalGlasses thermalGlasses;
-	private NightGlasses nightGlasses;
+	// Glasses interface
+	private IDropeable currentGlasses;
+	private IReseteable newView;
 
 	void Awake()
 	{
@@ -30,6 +36,8 @@ public class PlayerInteraction : MonoBehaviour
 			CheckInteractable();
 		}
 
+		LeaveGlasses();
+		ResetView();
 		FadeOut();
 	}
 
@@ -47,26 +55,18 @@ public class PlayerInteraction : MonoBehaviour
 
 	private void OnInteract(InputAction.CallbackContext ctx)
 	{
-		if (xRayGlasses != null)
+		if (currentGlasses != null)
 		{
-			xRayGlasses.DropGlasses();
-			xRayGlasses = null;
+			currentGlasses.DropGlasses();
+			currentGlasses = null;
 			isInteracting = false;
 			return;
 		}
 
-		if (thermalGlasses != null)
+		if (newView != null)
 		{
-			thermalGlasses.DropGlasses();
-			thermalGlasses = null;
-			isInteracting = false;
-			return;
-		}
-
-		if (nightGlasses != null)
-		{
-			nightGlasses.DropGlasses();
-			nightGlasses = null;
+			newView.ResetPassRendererFeature();
+			newView = null;
 			isInteracting = false;
 			return;
 		}
@@ -76,7 +76,7 @@ public class PlayerInteraction : MonoBehaviour
 
 	private void Interact()
 	{
-		Ray ray = new Ray(cam.transform.position, cam.transform.forward);
+		Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
 
 		if (Physics.Raycast(ray, out RaycastHit hit, distance))
 		{
@@ -86,22 +86,16 @@ public class PlayerInteraction : MonoBehaviour
 			{
 				interactable.Interact();
 
-				var currentXRayGlasses = hit.collider.GetComponent<XRayGlasses>();
-				if (currentXRayGlasses != null)
+				var dropeableGlasses = hit.collider.GetComponent<IDropeable>();
+				if (dropeableGlasses != null)
 				{
-					xRayGlasses = currentXRayGlasses;
+					currentGlasses = dropeableGlasses;
 				}
 
-				var currentThermalGlasses = hit.collider.GetComponent<ThermalGlasses>();
-				if (currentThermalGlasses != null)
+				var reseteableView = hit.collider.GetComponent<IReseteable>();
+				if (reseteableView != null)
 				{
-					thermalGlasses = currentThermalGlasses;
-				}
-
-				var currentNightGlasses = hit.collider.GetComponent<NightGlasses>();
-				if (currentNightGlasses != null)
-				{
-					nightGlasses = currentNightGlasses;
+					newView = reseteableView;
 				}
 
 				SetInteracting(true);
@@ -111,7 +105,7 @@ public class PlayerInteraction : MonoBehaviour
 
 	private void CheckInteractable()
 	{
-		Ray ray = new Ray(cam.transform.position, cam.transform.forward);
+		Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
 
 		bool hasInteractable = false;
 
@@ -120,22 +114,50 @@ public class PlayerInteraction : MonoBehaviour
 			hasInteractable = hit.collider.GetComponent<IInteractable>() != null;
 		}
 
-		targetAlpha = hasInteractable ? 1f : 0f;
+		interactTextAlpha = hasInteractable ? 1f : 0f;
 	}
 
 	public void SetInteracting(bool value)
 	{
 		isInteracting = value;
-		targetAlpha = 0f;
 
 		if (value)
 		{
-			interactCanvas.alpha = 0f; 
+			interactTextAlpha = 0f;
+			leaveGlassesTextAlpha = 0f;
+			resetViewTextAlpha = 0f;
 		}
 	}
 
 	private void FadeOut()
 	{
-		interactCanvas.alpha = Mathf.Lerp(interactCanvas.alpha,targetAlpha,Time.deltaTime * fadeSpeed);
+		interactCanvas.alpha = Mathf.Lerp(interactCanvas.alpha, interactTextAlpha, Time.deltaTime * fadeSpeed);
+		leaveGlassesCanvas.alpha = Mathf.Lerp(leaveGlassesCanvas.alpha, leaveGlassesTextAlpha, Time.deltaTime * fadeSpeed);
+		resetViewCanvas.alpha = Mathf.Lerp(resetViewCanvas.alpha, resetViewTextAlpha, Time.deltaTime * fadeSpeed);
+	}
+
+	private void LeaveGlasses()
+	{
+		bool hasGlasses = currentGlasses != null;
+
+		leaveGlassesTextAlpha = hasGlasses ? 1f : 0f;
+
+		if (hasGlasses)
+		{
+			interactTextAlpha = 0f;
+		}
+	}
+
+	private void ResetView()
+	{
+		bool isViewChanged = newView != null;
+
+		resetViewTextAlpha = isViewChanged ? 1f : 0f;
+
+		if (isViewChanged)
+		{
+			interactTextAlpha = 0f;
+		}
+		
 	}
 }

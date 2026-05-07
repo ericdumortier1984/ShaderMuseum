@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class NightGlasses : MonoBehaviour, IInteractable
+public class NightGlasses : MonoBehaviour, IInteractable, IDropeable
 {
     [SerializeField] private NightVision nightVision;
 
@@ -18,8 +18,11 @@ public class NightGlasses : MonoBehaviour, IInteractable
 
 	public void Interact()
     {
-        nightVision.EnableNightVision();
-        gameObject.SetActive(false);
+		if (!isInteracted)
+		{
+			nightVision.EnableNightVision();
+			gameObject.SetActive(false);
+		}
     }
 
 	public void DropGlasses()

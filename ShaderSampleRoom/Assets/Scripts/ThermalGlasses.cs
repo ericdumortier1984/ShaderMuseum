@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class ThermalGlasses : MonoBehaviour, IInteractable
+public class ThermalGlasses : MonoBehaviour, IInteractable, IDropeable
 {
     [SerializeField] private ThermalVision thermalVision;
 
@@ -18,8 +18,11 @@ public class ThermalGlasses : MonoBehaviour, IInteractable
 
 	public void Interact()
     {
-        thermalVision.EnableThermalVision();
-        gameObject.SetActive(false);
+		if (!isInteracted)
+		{
+			thermalVision.EnableThermalVision();
+			gameObject.SetActive(false);
+		}
     }
 
 	public void DropGlasses()
