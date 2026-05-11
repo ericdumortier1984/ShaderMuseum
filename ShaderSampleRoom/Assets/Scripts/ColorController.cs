@@ -8,20 +8,21 @@ public class ColorController : MonoBehaviour
 	[SerializeField] private Slider greenSlider;
 	[SerializeField] private Slider blueSlider;
 
-	[Header("Game Object")]
-	[SerializeField] private Lamp lamp;
-
 	[Header("Preview")]
 	[SerializeField] private Image preview;
 
-	private Lamp currentLamp;
+	private IColorable currentColorable;
 
-	public enum ColorType { Edge, Inner }
+	public enum ColorType {
+		Edge, 
+		Inner
+	}
+
 	public ColorType type;
 
-	public void SetLamp(Lamp lamp) 
+	public void SetObject(IColorable colorable)
 	{
-		currentLamp = lamp;
+		currentColorable = colorable;
 	}
 
 	public void SetInitialColor(Color color)
@@ -35,19 +36,23 @@ public class ColorController : MonoBehaviour
 
 	public void UpdateColor()
 	{
-		if (currentLamp == null) { return; }
+		if (currentColorable == null) { return; }
 
-		Color color = new Color(redSlider.value, greenSlider.value, blueSlider.value);
+		Color color = new Color(
+			redSlider.value, 
+			greenSlider.value, 
+			blueSlider.value
+		);
 
 		preview.color = color;
 
 		if (type == ColorType.Edge)
 		{
-			currentLamp.SetEdgeColor(color);
+			currentColorable.SetEdgeColor(color);
 		}
 		else
 		{
-			currentLamp.SetInnerColor(color);
+			currentColorable.SetInnerColor(color);
 		}
 	}
 }

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Lamp : MonoBehaviour, IInteractable
+public class Lamp : MonoBehaviour, IInteractable, IColorable, IPowerable
 {
 	[Header("Lamp")]
 	[SerializeField] private Material lampMaterial;
@@ -59,10 +59,10 @@ public class Lamp : MonoBehaviour, IInteractable
 		player.EnableControl(false);
 		LookAtObject();
 
-		edgeColorController.SetLamp(this);
-		innerColorController.SetLamp(this);
-		edgeController.SetLamp(this);
-		emissionController.SetLamp(this);
+		edgeColorController.SetObject(this);
+		innerColorController.SetObject(this);
+		edgeController.SetObject(this);
+		emissionController.SetObject(this);
 
 		edgeColorController.SetInitialColor(GetEdgeColor());
 		innerColorController.SetInitialColor(GetInnerColor());
@@ -127,5 +127,4 @@ public class Lamp : MonoBehaviour, IInteractable
 		player.EnableControl(true);
 		playerInteraction.SetInteracting(false);
 	}
-
 }

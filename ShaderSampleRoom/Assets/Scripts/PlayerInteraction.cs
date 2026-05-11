@@ -21,8 +21,8 @@ public class PlayerInteraction : MonoBehaviour
 	private float resetViewTextAlpha = 0f;
 
 	// Glasses interface
-	private IDropeable currentGlasses;
-	private IReseteable newView;
+	private IReleasable currentGlasses;
+	private IResettable newView;
 
 	void Awake()
 	{
@@ -86,16 +86,16 @@ public class PlayerInteraction : MonoBehaviour
 			{
 				interactable.Interact();
 
-				var dropeableGlasses = hit.collider.GetComponent<IDropeable>();
-				if (dropeableGlasses != null)
+				var releasableGlasses = hit.collider.GetComponent<IReleasable>();
+				if (releasableGlasses != null)
 				{
-					currentGlasses = dropeableGlasses;
+					currentGlasses = releasableGlasses;
 				}
 
-				var reseteableView = hit.collider.GetComponent<IReseteable>();
-				if (reseteableView != null)
+				var resettableView = hit.collider.GetComponent<IResettable>();
+				if (resettableView != null)
 				{
-					newView = reseteableView;
+					newView = resettableView;
 				}
 
 				SetInteracting(true);

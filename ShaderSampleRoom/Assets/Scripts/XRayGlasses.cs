@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class XRayGlasses : MonoBehaviour, IInteractable, IDropeable
+public class XRayGlasses : MonoBehaviour, IInteractable, IReleasable
 {
 	[SerializeField] private XRayVision xRayVision;
 

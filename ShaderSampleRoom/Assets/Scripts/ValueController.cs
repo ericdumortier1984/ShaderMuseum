@@ -5,14 +5,25 @@ public class ValueController : MonoBehaviour
 {
 	[SerializeField] private Slider slider;
 
-	private Lamp currentLamp;
+	private IPowerable currentPowerable;
+	private IFillable currentFillable;
 
-	public enum ValueType { EdgePower, Emission }
+	public enum ValueType {
+		EdgePower, 
+		Emission, 
+		Volume
+	}
+
 	public ValueType type;
 
-	public void SetLamp(Lamp lamp)
+	public void SetObject(IPowerable powerable)
 	{
-		currentLamp = lamp;
+		currentPowerable = powerable;
+	}
+
+	public void SetFillableObject(IFillable fillable)
+	{
+		currentFillable = fillable;
 	}
 
 	public void SetInitialValue(float value)
@@ -21,19 +32,31 @@ public class ValueController : MonoBehaviour
 		UpdateValue();
 	}
 
+	public void SetFillInitialValue(float value)
+	{
+		slider.value = value;
+		UpdateFillVolume();
+	}
+
 	public void UpdateValue()
 	{
-		if (currentLamp == null) return;
+		if (currentPowerable == null) { return; }
 
 		float value = slider.value;
 
 		if (type == ValueType.EdgePower)
 		{
-			currentLamp.SetEdgePower(value);
+			currentPowerable.SetEdgePower(value);
 		}
 		else
 		{
-			currentLamp.SetEmissionPower(value);
+			currentPowerable.SetEmissionPower(value);
 		}
+	}
+
+	public void UpdateFillVolume()
+	{
+		if (currentFillable == null) { return; }
+		currentFillable.SetFillVolume(slider.value);
 	}
 }

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class ThermalGlasses : MonoBehaviour, IInteractable, IDropeable
+public class ThermalGlasses : MonoBehaviour, IInteractable, IReleasable
 {
     [SerializeField] private ThermalVision thermalVision;
 
